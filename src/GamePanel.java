@@ -24,6 +24,20 @@ public class GamePanel extends JPanel implements ActionListener {
   boolean running = false;
   Timer timer;
   Random random;
+  JFrame frame = new JFrame();
+  JPanel panel = new JPanel();
+
+  public void createGUI() {
+    panel.add(new GamePanel());
+    frame.add(panel);
+    frame.setTitle("Snake  -_-_-_->");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setResizable(false);
+    frame.pack();
+    frame.setVisible(true);
+    frame.setLocationRelativeTo(null);
+  }
+
 
   GamePanel(){
     random= new Random();
@@ -50,11 +64,11 @@ public class GamePanel extends JPanel implements ActionListener {
     if(running) {
 
       //Grid screen code
-//      for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
-//
-//        g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-//        g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-//      }
+      for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+
+        g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+        g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
+      }
 
       g.setColor(Color.red);
       g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
@@ -158,6 +172,18 @@ public class GamePanel extends JPanel implements ActionListener {
     }
   }
 
+  public void closeRunningWindow(KeyEvent e) {
+    JComponent comp = (JComponent) e.getSource();
+    Window win = SwingUtilities.getWindowAncestor(comp);
+    win.dispose();
+  }
+  public void startAgain() {
+    EventQueue.invokeLater(() -> {
+      GamePanel game = new GamePanel();
+      game.createGUI();
+    });
+  }
+
   public void gameOver(Graphics g)
   {
     //score
@@ -217,6 +243,10 @@ public class GamePanel extends JPanel implements ActionListener {
             {
               direction='D';
             }
+            break;
+          case KeyEvent.VK_ENTER:
+            closeRunningWindow(e);
+            startAgain();
             break;
         }
       }
